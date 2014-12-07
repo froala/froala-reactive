@@ -51,7 +51,7 @@ Where:
 * The `onBeforeSave` argument provides a callback function (the `doSave` helper function) to handle the Froala-Editor save event.
 * The `_value` argument provides the HTML string that you want to display and edit
 
-Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead or additionally.
+Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead.
 
 The final line in the callback stops Froala Editor from generating its own AJAX call to post the updated HTML contents, because we have used the awesomeness of Meteor to do that for us instead.
 
@@ -64,7 +64,7 @@ However, Froala-Reactive *will* reactively update the displayed `_value` HTML im
 
 You can provide callbacks for any of the Froala-Editor [events](https://editor.froala.com/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
-For example, to set up a callback for the [afterUploadPastedImage}(https://editor.froala.com/events#afterUploadPastedImage) event:
+For example, to set up a callback for the [afterUploadPastedImage](https://editor.froala.com/events#afterUploadPastedImage) event:
 
 ```html
 {{> froalaReactive ...  _onafterUploadPastedImage=imagePasted ...}}

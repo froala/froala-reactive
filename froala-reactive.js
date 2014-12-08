@@ -60,6 +60,11 @@ Template.froalaReactive.rendered = function () {
     $input[froalaMethod]('setHTML', tmpl.data._value);
   }
 
+  // Hack to provide destroyed callback with froala editable object,
+  // by stuffing a reference to it in the template instance object.
+  // See: https://github.com/froala/froala-reactive/issues/2
+  tmpl.__fa_editable = $input.data('fa.editable');
+
   // Set up additional event handlers
   var eventHandlers = getEventHandlerNames(tmpl.data);
   _.each(eventHandlers, function (opt) {
@@ -106,9 +111,6 @@ Template.froalaReactive.rendered = function () {
     // Save current data context for comparison on next autorun execution
     lastData = _data;
    });
-
-  
-
 };
 
 /**
@@ -123,12 +125,15 @@ Template.froalaReactive.destroyed = function () {
   if (!froalaMethod) {
     return;
   }
-  // Destroy event handlers
-  var eventHandlers = getEventHandlerNames(tmpl.data);
-  _.each(eventHandlers, function (opt) {
-    var _eventName = 'editable.' + opt.substring(3); // Remove '_on' prefix
-    $input.unbind(_eventName);
-  });
+
+  if (!$input.data('fa.editable')) {
+    // Restore internal 'fa'editable' reference to froala editor.
+    // For some reason, by the time we get here in the destroyed procedure,
+    // this jQuery data appears to have been wiped.
+    // See: https://github.com/froala/froala-reactive/issues/2
+    $input.data('fa.editable', tmpl.__fa_editable);
+  }
+
   // Destroy froala editor object itself
   // This may throw an exception if Meteor has already torn down part of the DOM
   // managed by Froala Editor, so we wrap this in a try / catch block to

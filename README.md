@@ -123,20 +123,6 @@ Froala-Reactive will use 'froalaEditable' if it exists on the jQuery prototype, 
 1. Remember that you must provide one or more `_on` callbacks to handle changing the editable contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
 
-#### Change History
-
-Froala-Reactive follows the version numbers of the Froala Editor plugin itself.
-We also take advantage of the ability of Meteor packages versioning to apply `_wrapnumber` postfixes, to track incremental releases of Froala-Reactive againsdt a single Froala Editor release.
-
-**v1.2.4**
-Initial release
-
-**v1.2.4_1**
-Package version change
-
-**v1.2.4_2**
-1. Prevented memory leaks by ensursing the Froala Editor object is correctly destroyed when the Froala Reactive wrapper template is destroyed itself (see issue #2).
-
 #### Acknowledgements
 
 This package is based on the implementation of the [x-editable-reactive-template](https://github.com/davidworkman9/x-editable-reactive-template) package.

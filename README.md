@@ -58,7 +58,7 @@ The final line in the callback stops Froala Editor from generating its own AJAX 
 Note that Froala-Reactive *does not* automatically update the edited `_value`, you
 have to provide your own Froala-Editor event handler(s) to do that.
 
-However, Froala-Reactive *will* reactively update the displayed `_value` HTML immediately if you have assigned it to a data context property or template helper function which changes its value any time after the template has rendered (e.g. if the underlying collection document is updated from the server, or snother action on the client).
+However, Froala-Reactive *will* reactively update the displayed `_value` HTML immediately if you have assigned it to a data context property or template helper function which changes its value any time after the template has rendered (e.g. if the underlying collection document is updated from the server, or another action on the client).
 
 #### Options and Events
 

@@ -6,10 +6,9 @@ Note that Froala Editor requires a [license for commercial use](https://editor.f
 
 #### Installation
 
-You can install Froala-Reactive using Meteor's package management system:
+You can install Froala-Reactive using Meteor's package management system  The Froala-Reactive package automatically includes the separate froala:editor package which provides the actual Froala Editor javascript library:
 
 ```bash
-meteor add froala:editor
 meteor add froala:editor-reactive
 ```
 

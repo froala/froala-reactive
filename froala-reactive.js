@@ -53,7 +53,6 @@ Template.froalaReactive.rendered = function () {
     throw new Error('invalid-froala-editor-plugin');
   }
 
-
   // Create Froala Editor instance, setting options & initial HTML content
   // from template data context
   $input[froalaMethod](tmpl.data);
@@ -61,11 +60,13 @@ Template.froalaReactive.rendered = function () {
     $input[froalaMethod]('setHTML', tmpl.data._value);
   }
 
+  // Hack to provide destroyed callback with froala editable object,
+  // by stuffing a reference to it in the template instance object.
+  // See: https://github.com/froala/froala-reactive/issues/2
+  tmpl.__fa_editable = $input.data('fa.editable');
+
   // Set up additional event handlers
-  var eventHandlers = _.filter(Object.keys(tmpl.data), function (opt) {
-    return opt.indexOf('_on') === 0 && // Include if '_on...'
-      _.isFunction(tmpl.data[opt]); // and handler is indeed a function
-  });
+  var eventHandlers = getEventHandlerNames(tmpl.data);
   _.each(eventHandlers, function (opt) {
     var _eventName = 'editable.' + opt.substring(3); // Remove '_on' prefix
     $input.on(_eventName, function (e) {
@@ -110,7 +111,36 @@ Template.froalaReactive.rendered = function () {
     // Save current data context for comparison on next autorun execution
     lastData = _data;
    });
+};
 
+/**
+ * Ensure froalaEditor is properly removed to prevent memory leaks
+ */
+Template.froalaReactive.destroyed = function () {
+ var tmpl = this,
+    $input = tmpl.$('.froala-reactive-meteorized'),
+    froalaMethod;
+
+  froalaMethod = getFroalaEditableJQueryInstanceMethod($input);
+  if (!froalaMethod) {
+    return;
+  }
+
+  if (!$input.data('fa.editable')) {
+    // Restore internal 'fa'editable' reference to froala editor.
+    // For some reason, by the time we get here in the destroyed procedure,
+    // this jQuery data appears to have been wiped.
+    // See: https://github.com/froala/froala-reactive/issues/2
+    $input.data('fa.editable', tmpl.__fa_editable);
+  }
+
+  // Destroy froala editor object itself
+  // This may throw an exception if Meteor has already torn down part of the DOM
+  // managed by Froala Editor, so we wrap this in a try / catch block to
+  // silently ignore any such cases
+  try {
+    $input[froalaMethod]('destroy');
+  } catch (err) {}
 };
 
 /**
@@ -143,3 +173,13 @@ function getFroalaEditableJQueryInstanceMethod(froalaJQueryObject) {
   // Whoops! Looks like froala editor code has not been loaded
   return null;
 };
+
+/**
+ * Internal function to parse any '_on<event>' event callback arguments
+ */
+function getEventHandlerNames(tmplData) {
+ return _.filter(Object.keys(tmplData), function (opt) {
+    return opt.indexOf('_on') === 0 && // Include if '_on...'
+      _.isFunction(tmplData[opt]); // and handler is indeed a function
+  });
+}

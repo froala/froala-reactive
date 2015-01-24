@@ -6,10 +6,9 @@ Note that Froala Editor requires a [license for commercial use](https://editor.f
 
 #### Installation
 
-You can install Froala-Reactive using Meteor's package management system:
+You can install Froala-Reactive using Meteor's package management system  The Froala-Reactive package automatically includes the separate froala:editor package which provides the actual Froala Editor javascript library:
 
 ```bash
-meteor add froala:editor
 meteor add froala:editor-reactive
 ```
 
@@ -51,20 +50,20 @@ Where:
 * The `onBeforeSave` argument provides a callback function (the `doSave` helper function) to handle the Froala-Editor save event.
 * The `_value` argument provides the HTML string that you want to display and edit
 
-Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead or additionally.
+Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead.
 
 The final line in the callback stops Froala Editor from generating its own AJAX call to post the updated HTML contents, because we have used the awesomeness of Meteor to do that for us instead.
 
 Note that Froala-Reactive *does not* automatically update the edited `_value`, you
 have to provide your own Froala-Editor event handler(s) to do that.
 
-However, Froala-Reactive *will* reactively update the displayed `_value` HTML immediately if you have assigned it to a data context property or template helper function which changes its value any time after the template has rendered (e.g. if the underlying collection document is updated from the server, or snother action on the client).
+However, Froala-Reactive *will* reactively update the displayed `_value` HTML immediately if you have assigned it to a data context property or template helper function which changes its value any time after the template has rendered (e.g. if the underlying collection document is updated from the server, or another action on the client).
 
 #### Options and Events
 
 You can provide callbacks for any of the Froala-Editor [events](https://editor.froala.com/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
-For example, to set up a callback for the [afterUploadPastedImage}(https://editor.froala.com/events#afterUploadPastedImage) event:
+For example, to set up a callback for the [afterUploadPastedImage](https://editor.froala.com/events#afterUploadPastedImage) event:
 
 ```html
 {{> froalaReactive ...  _onafterUploadPastedImage=imagePasted ...}}
@@ -122,7 +121,6 @@ Froala-Reactive will use 'froalaEditable' if it exists on the jQuery prototype, 
 
 1. Remember that you must provide one or more `_on` callbacks to handle changing the editable contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
-
 
 #### Acknowledgements
 

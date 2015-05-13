@@ -1,8 +1,8 @@
 ## Froala-Reactive
 
-Froala-Reactive provides a template-based, reactive wrapper around the [Froala Editor](https://editor.froala.com/) WYSIWYG HTML editor, designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.  
+Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
 
-Note that Froala Editor requires a [license for commercial use](https://editor.froala.com/pricing).
+Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
 
 #### Installation
 
@@ -61,9 +61,9 @@ However, Froala-Reactive *will* reactively update the displayed `_value` HTML im
 
 #### Options and Events
 
-You can provide callbacks for any of the Froala-Editor [events](https://editor.froala.com/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
+You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
-For example, to set up a callback for the [afterUploadPastedImage](https://editor.froala.com/events#afterUploadPastedImage) event:
+For example, to set up a callback for the [afterUploadPastedImage](https://froala.com/wysiwyg-editor/docs/events#afterUploadPastedImage) event:
 
 ```html
 {{> froalaReactive ...  _onafterUploadPastedImage=imagePasted ...}}
@@ -77,12 +77,12 @@ Template.myTemplate.helpers({
       // Do something
     };
   }
-});  
+});
 ```
 
 Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('editable.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `editable.` string when setting up the underlying Froala-Editor plugin callback
 
-Similarly, you can pass any of the Froala-Editor [options](https://editor.froala.com/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.  
+Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
 
 ```html
 {{> froalaReactive ... language=getLanguage ...}}
@@ -96,11 +96,11 @@ Template.myTemplate.helpers({
 })
 ```
 
-Note that some option values cannot be changed after initialisation (e.g. [inlineMode](https://editor.froala.com/options#inlineMode)) ... please refer to the Meteor-Editor documentation.
+Note that some option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docsoptions#inlineMode)) ... please refer to the Meteor-Editor documentation.
 
 #### Methods
 
-You can invoke any of the Froala Editor [methods](https://editor.froala.com/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.getHTML()`.
+You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.getHTML()`.
 
 #### jQuery 'editable' instance method clash
 
@@ -130,7 +130,5 @@ This package is based on the implementation of the [x-editable-reactive-template
 
 This package is released under the MIT License (see LICENSE).
 
-You may use the editor for non-commercial websites for free under the [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](http://creativecommons.org/licenses/by-nc-nd/4.0/).
-
-Froala Editor has [4 different licenses](http://editor.froala.com/download/) for commercial use.
-For details please see [License Agreement](http://editor.froala.com/license).
+Froala Editor has [4 different licenses](https://froala.com/wysiwyg-editor/pricing) for commercial use.
+For details please see [License Agreement](https://froala.com/wysiwyg-editor/terms).

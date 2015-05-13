@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.7 - 2015-05-13
+
+- [upgrade] Bump version dependency on froala-editor to 1.2.7
+
 ## 1.2.5_1 - 2015-01-25
 
 - [upgrade] Bump version dependency on froala-editor to 1.2.5_2

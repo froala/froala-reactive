@@ -130,5 +130,5 @@ This package is based on the implementation of the [x-editable-reactive-template
 
 This package is released under the MIT License (see LICENSE).
 
-Froala Editor has [4 different licenses](https://froala.com/wysiwyg-editor/pricing) for commercial use.
+Froala Editor has [3 different licenses](https://froala.com/wysiwyg-editor/pricing) for commercial use.
 For details please see [License Agreement](https://froala.com/wysiwyg-editor/terms).

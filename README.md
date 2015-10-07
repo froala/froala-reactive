@@ -1,8 +1,8 @@
 ## Froala-Reactive
 
-Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
+Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/v2.0/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
 
-Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
+Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/v2.0/pricing).
 
 #### Installation
 
@@ -61,9 +61,9 @@ However, Froala-Reactive *will* reactively update the displayed `_value` HTML im
 
 #### Options and Events
 
-You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
+You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/v2.0/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
-For example, to set up a callback for the [afterUploadPastedImage](https://froala.com/wysiwyg-editor/docs/events#afterUploadPastedImage) event:
+For example, to set up a callback for the [afterUploadPastedImage](https://froala.com/wysiwyg-editor/v2.0/docs/events#afterUploadPastedImage) event:
 
 ```html
 {{> froalaReactive ...  _onafterUploadPastedImage=imagePasted ...}}
@@ -80,9 +80,9 @@ Template.myTemplate.helpers({
 });
 ```
 
-Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('editable.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `editable.` string when setting up the underlying Froala-Editor plugin callback
+Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback
 
-Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
+Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/v2.0/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
 
 ```html
 {{> froalaReactive ... language=getLanguage ...}}
@@ -96,30 +96,15 @@ Template.myTemplate.helpers({
 })
 ```
 
-Note that some option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docsoptions#inlineMode)) ... please refer to the Meteor-Editor documentation.
+Note that some option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/v2.0/docs/options#inlineMode)) ... please refer to the Meteor-Editor documentation.
 
 #### Methods
 
-You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.getHTML()`.
-
-#### jQuery 'editable' instance method clash
-
-Using Froala Editor with another jQuery plugin that also overrides the jQuery `editable` instance method (such as [X-editable](http://vitalets.github.io/x-editable/index.html)),  will cause issues in your application.  This is just a feature of jQuery namespacing and Froala Editor, not of this package.  If you can control the load order of the competing jQuery packages, you can try and rename Froala Editor plugin's 'editable' property to something else:
-
-```javascript
-// load froala:editor package
-// then:
-$.fn.froalaEditable = $.fn.editable;
-delete $.fn.editable;
-// then load x-editable package
-// then load froala:editor-reactive package
-```
-
-Froala-Reactive will use 'froalaEditable' if it exists on the jQuery prototype, else it will use 'editable'.
+You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/v2.0/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.getHTML()`.
 
 #### Gotchas
 
-1. Remember that you must provide one or more `_on` callbacks to handle changing the editable contents, if you want use the Meteor Framework to do so.
+1. Remember that you must provide one or more `_on` callbacks to handle changing the froalaEditor contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
 
 #### Acknowledgements
@@ -130,5 +115,5 @@ This package is based on the implementation of the [x-editable-reactive-template
 
 This package is released under the MIT License (see LICENSE).
 
-Froala Editor has [3 different licenses](https://froala.com/wysiwyg-editor/pricing) for commercial use.
-For details please see [License Agreement](https://froala.com/wysiwyg-editor/terms).
+Froala Editor has [3 different licenses](https://froala.com/wysiwyg-editor/v2.0/pricing) for commercial use.
+For details please see [License Agreement](https://froala.com/wysiwyg-editor/v2.0/terms).

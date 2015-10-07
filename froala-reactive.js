@@ -3,7 +3,7 @@
  * ===============
  *
  * (c) 2014 RSBA Technology Ltd
- * 
+ *
  *  Wraps Froala Editor jQuery plugin into a reactive Meteor template object
  *
  * Implementation heavily based on 'x-editable-reactive-template' Meteor package
@@ -11,19 +11,19 @@
  *
  * Example Usage:
  *
- * {{> froalaEditable inlineMode=true initOnClick=false autosave=true 
- *     autosaveInterval=2000 _onbeforeSave=onSaved 
+ * {{> froalaEditor inlineMode=true initOnClick=false autosave=true
+ *     autosaveInterval=2000 _onbeforeSave=onSaved
  *     _value=requirementParameter.text}}
  *
  * Set Froala Editor options as <option>=<value>
- * (see: https://editor.froala.com/options)
+ * (see: https://froala.com/wysiwyg-editor/v2.0)
  * This template will dynamically call option setter methods if any of the
  * providfed option parameter values change, reactively.
  *
  * Register callbacks for Froala Editor events by prefixing the event name
  * by '_on'.  Callbacks get the same two parameters: e, editor provided by
  * Froala Editor's event callbacks.  The data context on the callbacks is set
- * from the data context of the froalaEditable template instance.
+ * from the data context of the froalaEditor template instance.
  *
  * onSaved: function () {
  *   var self = this;
@@ -35,7 +35,7 @@
  * Pass the model value to be wrapped by the editor in the '_value' argument
  *
  */
- 
+
 'use strict';
 
 Template.froalaReactive.rendered = function () {
@@ -48,7 +48,7 @@ Template.froalaReactive.rendered = function () {
     throw new Error ('invalid-froala-reactive-template');
   }
 
-  froalaMethod = getFroalaEditableJQueryInstanceMethod($input);
+  froalaMethod = getFroalaEditorJQueryInstanceMethod($input);
   if (!froalaMethod) {
     throw new Error('invalid-froala-editor-plugin');
   }
@@ -60,15 +60,15 @@ Template.froalaReactive.rendered = function () {
     $input[froalaMethod]('setHTML', tmpl.data._value);
   }
 
-  // Hack to provide destroyed callback with froala editable object,
+  // Hack to provide destroyed callback with froala editor object,
   // by stuffing a reference to it in the template instance object.
   // See: https://github.com/froala/froala-reactive/issues/2
-  tmpl.__fa_editable = $input.data('fa.editable');
+  tmpl.__froala_editor = $input.data('froala.editor');
 
   // Set up additional event handlers
   var eventHandlers = getEventHandlerNames(tmpl.data);
   _.each(eventHandlers, function (opt) {
-    var _eventName = 'editable.' + opt.substring(3); // Remove '_on' prefix
+    var _eventName = 'froalaEditor.' + opt.substring(3); // Remove '_on' prefix
     $input.on(_eventName, function (e) {
       e.preventDefault();
       // Call callback, setting `this` to the latest, reactive, data context
@@ -100,8 +100,8 @@ Template.froalaReactive.rendered = function () {
     // Update froala editor option values, if changed
     var changedOpts = _.filter(Object.keys(_data), function (opt) {
         // Find all option values whose value has changed
-        // Exclude any opt properties that start with '_', reserved for 
-        // passing froala-reactive - specific parameters into the template 
+        // Exclude any opt properties that start with '_', reserved for
+        // passing froala-reactive - specific parameters into the template
         // data context.
         return opt.indexOf('_')!==0 && !_.isEqual(lastData[opt], _data[opt]);
     });
@@ -121,17 +121,17 @@ Template.froalaReactive.destroyed = function () {
     $input = tmpl.$('.froala-reactive-meteorized'),
     froalaMethod;
 
-  froalaMethod = getFroalaEditableJQueryInstanceMethod($input);
+  froalaMethod = froalaEditor($input);
   if (!froalaMethod) {
     return;
   }
 
-  if (!$input.data('fa.editable')) {
-    // Restore internal 'fa'editable' reference to froala editor.
+  if (!$input.data('froala.editor')) {
+    // Restore internal 'froala_editor' reference to froala editor.
     // For some reason, by the time we get here in the destroyed procedure,
     // this jQuery data appears to have been wiped.
     // See: https://github.com/froala/froala-reactive/issues/2
-    $input.data('fa.editable', tmpl.__fa_editable);
+    $input.data('froala.editor', tmpl.__froala_editor);
   }
 
   // Destroy froala editor object itself
@@ -144,31 +144,15 @@ Template.froalaReactive.destroyed = function () {
 };
 
 /**
- * Internal function to return correct Froala Editable instance method name
+ * Internal function to return correct Froala Editor instance method name
  *
- * If you want to use both FroalaEditable and XEditable jQuery plugin packages
- * in your application, both of them set a 'editable' instance method on the 
- * jQuery prototype.  So, you have to rename 'editable' for one of these two 
- * plugins, after loading script for one plugin, but before the second:
- *
- * ... load Froala Editable package ...
- * 
- * // Rename Froala's 'editable' property to 'froalaEditable'
- * $.fn.froalaEditable = $.fn.editable;
- * delete $.fn.editable;
- * 
- * ... load XEditable package
- * 
  */
-function getFroalaEditableJQueryInstanceMethod(froalaJQueryObject) {
+function getFroalaEditorJQueryInstanceMethod(froalaJQueryObject) {
   if (froalaJQueryObject) {
-    if (_.isFunction(froalaJQueryObject.froalaEditable)) {
-      // Overidden froala editable jQuery instance method
-      return 'froalaEditable';
-    } else if (_.isFunction(froalaJQueryObject.editable)) {
-      // Original froala editable jQuery instance method
-      return 'editable';
-    }    
+    if (_.isFunction(froalaJQueryObject.froalaEditor)) {
+      // Original froala jQuery instance method
+      return 'froalaEditor';
+    }
   }
   // Whoops! Looks like froala editor code has not been loaded
   return null;

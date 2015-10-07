@@ -18,11 +18,11 @@
     ],
     [
       "fortawesome:fontawesome",
-      "4.2.0"
+      "4.4.0"
     ],
     [
       "froala:editor",
-      "1.2.8"
+      "2.0.0-rc.3-1"
     ],
     [
       "geojson-utils",

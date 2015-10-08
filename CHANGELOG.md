@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0 - 2015-10-08
+- [upgrade] Bump version dependency on froala-editor to 2.0.0
+- [upgrade] Update code to work with backwardly-incompatible API changes in Froala Editor v2
+
 ## 1.2.7 - 2015-05-13
 
 - [upgrade] Bump version dependency on froala-editor to 1.2.7

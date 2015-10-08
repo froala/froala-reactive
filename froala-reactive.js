@@ -57,7 +57,7 @@ Template.froalaReactive.rendered = function () {
   // from template data context
   $input[froalaMethod](tmpl.data);
   if (tmpl.data._value) {
-    $input[froalaMethod]('setHTML', tmpl.data._value);
+    $input[froalaMethod]('html.set', tmpl.data._value);
   }
 
   // Hack to provide destroyed callback with froala editor object,
@@ -91,9 +91,9 @@ Template.froalaReactive.rendered = function () {
 
     // Update HTML data wrapped within froala editor, if changed
     if (_data._value && !_.isEqual(lastData._value, _data._value)) {
-      $input[froalaMethod]('setHTML', _data._value);
+      $input[froalaMethod]('html.set', _data._value);
       // Restore current selection from markers, if present
-      $input[froalaMethod]('restoreSelectionByMarkers');
+      $input[froalaMethod]('selection.restore');
 
     }
 

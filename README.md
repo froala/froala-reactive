@@ -30,7 +30,7 @@ Template.myTemplate.helpers({
     var self = this;
     return function (e, editor) {
       // Get edited HTML from Froala-Editor
-      var newHTML = editor.getHTML();
+      var newHTML = editor.html.get();
       // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
       if (!_.isEqual(newHTML, self.myDoc.myHTMLField)) {
         console.log("onSave HTML is :"+newHTML);
@@ -100,7 +100,16 @@ Note that some option values cannot be changed after initialisation (e.g. [inlin
 
 #### Methods
 
-You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/v2.0/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.getHTML()`.
+You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/v2.0/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.
+
+If you need to, you can access the underlying froalaEditor jQuery object from a parent template as:
+
+```javascript
+Template.someTemplate.onRendered(function() {
+  const tmpl = this;
+  tmpl.$('div.froala-reactive-meteorized').froalaEditor('some method')
+})
+```
 
 #### Gotchas
 

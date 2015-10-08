@@ -23,16 +23,17 @@ Froala-Reactive provides a [Template inclusion tag](https://github.com/meteor/me
 ```html
 <template name="myTemplate">
   <div>
-    {{> froalaReactive _onbeforeSave=doSave _value=myDoc.myHTMLField}}
+    {{> froalaReactive getFEContext}}
   </div>
 </template>
 ```
 
 ```javascript
 Template.myTemplate.helpers({
-  doSave: function () {
-    var self = this;
-    return function (e, editor) {
+  getFEContext: function () {
+    const self = this;
+    _value=self.myDoc.myHTMLField,
+    "_onsave.before": function (e, editor) {
       // Get edited HTML from Froala-Editor
       var newHTML = editor.html.get();
       // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
@@ -43,15 +44,16 @@ Template.myTemplate.helpers({
         });
       }
       return false; // Stop Froala Editor from POSTing to the Save URL
-    }
-  }
+    },
+  },
 })
 ```
 
 Where:
 
 * The "myTemplate" template has a data context that contains a 'myDoc' property, which itself contains '_id' and 'myHTMLField' properties.
-* The `onBeforeSave` argument provides a callback function (the `doSave` helper function) to handle the Froala-Editor save event.
+* We use a helper to build the data context object to pass to the froalalReactive template.
+* The `"_onsave.before"` property provides a callback function (the `doSave` helper function) to handle the Froala-Editor save event.
 * The `_value` argument provides the HTML string that you want to display and edit
 
 Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead.
@@ -119,6 +121,7 @@ Template.someTemplate.onRendered(function() {
 
 1. Remember that you must provide one or more `_on` callbacks to handle changing the froalaEditor contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
+3. The Froala Editor V2 API has renamed some methods with dotted notation (e.g. [save.before](https://www.froala.com/wysiwyg-editor/v2.0/docs/events#save.before).  This means you cannot set their values directly in a blaze template (it throws an error in the blaze compiler if you try something like `{{froalaReactive onsave.before=doSave}}`).  Instead, you will have to create a template helper function that builds the complete context JSON object ... see the example given in the Basic section above. 
 
 #### Acknowledgements
 

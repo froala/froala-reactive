@@ -121,7 +121,7 @@ Template.froalaReactive.destroyed = function () {
     $input = tmpl.$('.froala-reactive-meteorized'),
     froalaMethod;
 
-  froalaMethod = froalaEditor($input);
+  froalaMethod = getFroalaEditorJQueryInstanceMethod($input);
   if (!froalaMethod) {
     return;
   }

@@ -11,8 +11,7 @@
  *
  * Example Usage:
  *
- * {{> froalaEditor inlineMode=true initOnClick=false autosave=true
- *     autosaveInterval=2000 _onbeforeSave=onSaved
+ * {{> froalaEditor inlineMode=true initOnClick=false saveInterval=2000 
  *     _value=requirementParameter.text}}
  *
  * Set Froala Editor options as <option>=<value>

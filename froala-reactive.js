@@ -78,7 +78,7 @@ Template.froalaReactive.onRendered(function () {
     });
     if (_changedOpts.length > 0) {
       // Destroy and re-init the editor
-      const _snapshot = tmpl.editor.froalaEditor('snapshot.get');
+      var _snapshot = tmpl.editor.froalaEditor('snapshot.get');
       tmpl.editor.froalaEditor('destroy');
       initEditor(tmpl, _data, lastData, $input, froalaMethod);
       tmpl.editor.froalaEditor('snapshot.restore', _snapshot);

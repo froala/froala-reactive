@@ -31,20 +31,30 @@ Froala-Reactive provides a [Template inclusion tag](https://github.com/meteor/me
 ```javascript
 Template.myTemplate.helpers({
   getFEContext: function () {
-    const self = this;
-    _value=self.myDoc.myHTMLField,
-    "_onsave.before": function (e, editor) {
-      // Get edited HTML from Froala-Editor
-      var newHTML = editor.html.get();
-      // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
-      if (!_.isEqual(newHTML, self.myDoc.myHTMLField)) {
-        console.log("onSave HTML is :"+newHTML);
-        myCollection.update({_id: self.myDoc._id}, {
-          $set: {myHTMLField: newHTML}
-        });
-      }
-      return false; // Stop Froala Editor from POSTing to the Save URL
-    },
+    var self = this;
+    return {
+      // Set html content
+      _value: self.myDoc.myHTMLField,
+
+      // Set some FE options
+      toolbarInline: true,
+      initOnClick: false,
+      tabSpaces: false,
+
+      // FE save.before event handler function:
+      "_onsave.before": function (e, editor) {
+        // Get edited HTML from Froala-Editor
+        var newHTML = editor.html.get();
+        // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
+        if (!_.isEqual(newHTML, self.myDoc.myHTMLField)) {
+          console.log("onSave HTML is :"+newHTML);
+          myCollection.update({_id: self.myDoc._id}, {
+            $set: {myHTMLField: newHTML}
+          });
+        }
+        return false; // Stop Froala Editor from POSTing to the Save URL
+      },
+    }
   },
 })
 ```
@@ -53,7 +63,8 @@ Where:
 
 * The "myTemplate" template has a data context that contains a 'myDoc' property, which itself contains '_id' and 'myHTMLField' properties.
 * We use a helper to build the data context object to pass to the froalalReactive template.
-* The `"_onsave.before"` property provides a callback function (the `doSave` helper function) to handle the Froala-Editor save event.
+* We set some [Froala Editor options](https://www.froala.com/wysiwyg-editor/v2.0/docs/options)
+* The `"_onsave.before"` property provides a callback function to handle the Froala-Editor [save.before](https://www.froala.com/wysiwyg-editor/v2.0/docs/events#save.before) event.
 * The `_value` argument provides the HTML string that you want to display and edit
 
 Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead.

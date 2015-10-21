@@ -114,7 +114,9 @@ Template.froalaReactive.onDestroyed(function () {
   // This may throw an exception if Meteor has already torn down part of the DOM
   // managed by Froala Editor, so we wrap this in a try / catch block to
   // silently ignore any such cases
-  tmpl.editor.froalaEditor('destroy')
+  try {
+    $input[froalaMethod]('destroy');
+  } catch (e) {}
 
   // Workround for https://github.com/froala/wysiwyg-editor/issues/844
   $('.fr-modal').remove();

@@ -1,12 +1,12 @@
 ## Froala-Reactive
 
-Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/v2.0/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
+Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
 
-Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/v2.0/pricing).
+Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
 
 #### Breaking Change from v1.2.x to v2.x
 
-Version 2.0.0 of this package onwards uses the upgraded Froala Editor V2.  You will need to update and revise all Froala Editor API usage in your code (e.g. events, additional Froalal Editor method calls, options) as described in the [V2 migration guide](https://www.froala.com/wysiwyg-editor/v2.0/docs/migrate-from-v1).  Please contact Froala directly for help, unless you really think there is an issue in the reactive wrapper code in this package(!)
+Version 2.0.0 of this package onwards uses the upgraded Froala Editor V2.  You will need to update and revise all Froala Editor API usage in your code (e.g. events, additional Froala Editor method calls, options) as described in the [V2 migration guide](https://www.froala.com/wysiwyg-editor/docs/migrate-from-v1).  Please contact Froala directly for help, unless you really think there is an issue in the reactive wrapper code in this package(!)
 
 #### Installation
 
@@ -63,8 +63,8 @@ Where:
 
 * The "myTemplate" template has a data context that contains a 'myDoc' property, which itself contains '_id' and 'myHTMLField' properties.
 * We use a helper to build the data context object to pass to the froalalReactive template.
-* We set some [Froala Editor options](https://www.froala.com/wysiwyg-editor/v2.0/docs/options)
-* The `"_onsave.before"` property provides a callback function to handle the Froala-Editor [save.before](https://www.froala.com/wysiwyg-editor/v2.0/docs/events#save.before) event.
+* We set some [Froala Editor options](https://www.froala.com/wysiwyg-editor/docs/options)
+* The `"_onsave.before"` property provides a callback function to handle the Froala-Editor [save.before](https://www.froala.com/wysiwyg-editor/docs/events#save.before) event.
 * The `_value` argument provides the HTML string that you want to display and edit
 
 Here, we are triggering the update of the underlying 'myDoc' document record in the 'myCollection' collection when the Froala Editor 'beforeSave' event triggers.  We could easily have used the 'blur' or 'contentChanged' events instead.
@@ -78,12 +78,12 @@ However, Froala-Reactive *will* reactively update the displayed `_value` HTML im
 
 #### Options and Events
 
-You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/v2.0/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
+You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
-For example, to set up a callback for the [afterUploadPastedImage](https://froala.com/wysiwyg-editor/v2.0/docs/events#afterUploadPastedImage) event:
+For example, to set up a callback for the [image.beforeUpload](https://froala.com/wysiwyg-editor/docs/events#image.beforeUpload) event:
 
 ```html
-{{> froalaReactive ...  _onafterUploadPastedImage=imagePasted ...}}
+{{> froalaReactive ...  _onimage.beforeUpload=imagePasted ...}}
 ```
 
 ```javascript
@@ -99,7 +99,7 @@ Template.myTemplate.helpers({
 
 Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback
 
-Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/v2.0/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
+Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
 
 ```html
 {{> froalaReactive ... language=getLanguage ...}}
@@ -113,11 +113,11 @@ Template.myTemplate.helpers({
 })
 ```
 
-Note that some option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/v2.0/docs/options#inlineMode)) ... please refer to the Meteor-Editor documentation.
+Note that option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docs/options#toolbarInline)) ... please refer to the Meteor-Editor documentation.
 
 #### Methods
 
-You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/v2.0/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.
+You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.
 
 If you need to, you can access the underlying froalaEditor jQuery object from a parent template as:
 
@@ -132,7 +132,7 @@ Template.someTemplate.onRendered(function() {
 
 1. Remember that you must provide one or more `_on` callbacks to handle changing the froalaEditor contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
-3. The Froala Editor V2 API has renamed some methods with dotted notation (e.g. [save.before](https://www.froala.com/wysiwyg-editor/v2.0/docs/events#save.before).  This means you cannot set their values directly in a blaze template (it throws an error in the blaze compiler if you try something like `{{froalaReactive onsave.before=doSave}}`).  Instead, you will have to create a template helper function that builds the complete context JSON object ... see the example given in the Basic section above. 
+3. The Froala Editor V2 API has renamed some methods with dotted notation (e.g. [save.before](https://www.froala.com/wysiwyg-editor/docs/events#save.before).  This means you cannot set their values directly in a blaze template (it throws an error in the blaze compiler if you try something like `{{froalaReactive onsave.before=doSave}}`).  Instead, you will have to create a template helper function that builds the complete context JSON object ... see the example given in the Basic section above.
 
 #### Acknowledgements
 
@@ -140,7 +140,7 @@ This package is based on the implementation of the [x-editable-reactive-template
 
 #### License
 
-This package is released under the MIT License (see LICENSE).
+This package is released under the MIT License (see LICENSE). However, in order to use Froala WYSIWYG HTML Editor plugin you should purchase a license for it.
 
-Froala Editor has [3 different licenses](https://froala.com/wysiwyg-editor/v2.0/pricing) for commercial use.
-For details please see [License Agreement](https://froala.com/wysiwyg-editor/v2.0/terms).
+Froala Editor has [3 different licenses](https://froala.com/wysiwyg-editor/pricing) for commercial use.
+For details please see [License Agreement](https://froala.com/wysiwyg-editor/terms).

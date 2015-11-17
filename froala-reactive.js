@@ -11,11 +11,11 @@
  *
  * Example Usage:
  *
- * {{> froalaEditor inlineMode=true initOnClick=false saveInterval=2000 
+ * {{> froalaEditor toolbarInline=true initOnClick=false saveInterval=2000
  *     _value=requirementParameter.text}}
  *
  * Set Froala Editor options as <option>=<value>
- * (see: https://froala.com/wysiwyg-editor/v2.0)
+ * (see: https://froala.com/wysiwyg-editor)
  * This template will dynamically call option setter methods if any of the
  * providfed option parameter values change, reactively.
  *

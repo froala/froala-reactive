@@ -115,6 +115,8 @@ Template.myTemplate.helpers({
 
 Note that option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docs/options#toolbarInline)) ... please refer to the Meteor-Editor documentation.
 
+If you have multiple instances of `{{froalaReactive}}` in the same template, and you need to target the underlying FroalaEditor instance in each, override the wrapping `div` class name in each instance to be a unique value, by specifying the `_className=fooClass`.
+
 #### Methods
 
 You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.

@@ -17,7 +17,7 @@
  * Set Froala Editor options as <option>=<value>
  * (see: https://froala.com/wysiwyg-editor)
  * This template will dynamically call option setter methods if any of the
- * providfed option parameter values change, reactively.
+ * provided option parameter values change, reactively.
  *
  * Register callbacks for Froala Editor events by prefixing the event name
  * by '_on'.  Callbacks get the same two parameters: e, editor provided by
@@ -33,14 +33,28 @@
  *
  * Pass the model value to be wrapped by the editor in the '_value' argument
  *
+ * Override the template wrapper class by setting '_className' argument (default "froala-reactive-meteorized") 
+ * 
  */
 
 'use strict';
 
+Template.froalaReactive.helpers({
+  getClass: function () {
+    var tmpl = Template.instance();
+    return tmpl.wrapperClassName;
+  }
+});
+
+Template.froalaReactive.onCreated(function () {
+  let tmpl = this;
+  tmpl.wrapperClassName = tmpl.data._className || "froala-reactive-meteorized";
+})
+
 Template.froalaReactive.onRendered(function () {
   var tmpl = this,
     lastData = tmpl.data,
-    $input = tmpl.$('.froala-reactive-meteorized'),
+    $input = tmpl.$('.'+tmpl.wrapperClassName),
     froalaMethod;
 
   if ($input.length !== 1) {
@@ -94,7 +108,7 @@ Template.froalaReactive.onRendered(function () {
  */
 Template.froalaReactive.onDestroyed(function () {
  var tmpl = this,
-    $input = tmpl.$('.froala-reactive-meteorized'),
+    $input = tmpl.$('.'+tmpl.wrapperClassName),
     froalaMethod;
 
   froalaMethod = getFroalaEditorJQueryInstanceMethod($input);
@@ -179,3 +193,4 @@ function getEventHandlerNames(tmplData) {
       _.isFunction(tmplData[opt]); // and handler is indeed a function
   });
 }
+

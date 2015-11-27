@@ -33,7 +33,9 @@
  *
  * Pass the model value to be wrapped by the editor in the '_value' argument
  *
- * Override the template wrapper class by setting '_className' argument (default "froala-reactive-meteorized") 
+ * Override the template wrapper class by setting '_className' argument (default "froala-reactive-meteorized")
+ *
+ * If you save the contents of the editor with markers included, set the `_keepMarkers=true` argument to make sure the comparison between current & new content respects the marker html.
  * 
  */
 
@@ -47,7 +49,7 @@ Template.froalaReactive.helpers({
 });
 
 Template.froalaReactive.onCreated(function () {
-  let tmpl = this;
+  var tmpl = this;
   tmpl.wrapperClassName = tmpl.data._className || "froala-reactive-meteorized";
 })
 
@@ -76,10 +78,11 @@ Template.froalaReactive.onRendered(function () {
     var _data = Template.currentData();
 
     // Update HTML data wrapped within froala editor, if changed
-    if (_data._value && !_.isEqual(lastData._value, _data._value)) {
+    var currentHTMLWithMarkers = $input[froalaMethod]('html.get', _data._keepMarkers /* keep_markers */);
+    if (_data._value && !_.isEqual(currentHTMLWithMarkers, _data._value)) {
       $input[froalaMethod]('html.set', _data._value);
-      // Restore current selection from markers, if present
-      $input[froalaMethod]('selection.restore');
+      _keepMarkers && $input[froalaMethod]('selection.restore');
+
     }
 
     // Update froala editor option values, if changed

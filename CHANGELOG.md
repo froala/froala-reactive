@@ -1,6 +1,7 @@
 # Changelog
 ## 2.0.1_1 - 2015-11-27
 - [feature] Added _className data context property to override wrapper div class (to distinguish multiple instances in same template)
+- [feature] Added _keepMarkers data context property to work alongside code that preserves cursor position in the wrapped Froala Editor instance.
 
 ## 2.0.0 - 2015-10-18
 - [upgrade] Bump version dependency on froala-editor to 2.0.0

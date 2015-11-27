@@ -35,6 +35,10 @@ Template.myTemplate.helpers({
     return {
       // Set html content
       _value: self.myDoc.myHTMLField,
+      // Preserving cursor markers
+      _keepMarkers: true,
+      // Override wrapper class 
+      _className: "froala-reactive-meteorized-override",
 
       // Set some FE options
       toolbarInline: true,
@@ -44,7 +48,7 @@ Template.myTemplate.helpers({
       // FE save.before event handler function:
       "_onsave.before": function (e, editor) {
         // Get edited HTML from Froala-Editor
-        var newHTML = editor.html.get();
+        var newHTML = editor.html.get(true /* keep_markers */);
         // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
         if (!_.isEqual(newHTML, self.myDoc.myHTMLField)) {
           console.log("onSave HTML is :"+newHTML);
@@ -78,6 +82,8 @@ However, Froala-Reactive *will* reactively update the displayed `_value` HTML im
 
 #### Options and Events
 
+##### `_on` Callbacks
+
 You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
 For example, to set up a callback for the [image.beforeUpload](https://froala.com/wysiwyg-editor/docs/events#image.beforeUpload) event:
@@ -99,6 +105,8 @@ Template.myTemplate.helpers({
 
 Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback
 
+##### Froala Editor option pass-through
+
 Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
 
 ```html
@@ -115,7 +123,13 @@ Template.myTemplate.helpers({
 
 Note that option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docs/options#toolbarInline)) ... please refer to the Meteor-Editor documentation.
 
-If you have multiple instances of `{{froalaReactive}}` in the same template, and you need to target the underlying FroalaEditor instance in each, override the wrapping `div` class name in each instance to be a unique value, by specifying the `_className=fooClass`.
+##### _className wrapper div class name override
+
+If you have multiple instances of `{{froalaReactive}}` in the same template, and you need to target the underlying FroalaEditor instance in each, override the wrapping `div` class name in each instance to be a unique value, by specifying the `_className=fooClass` context property.
+
+##### _keepMarkers
+
+If you preserve the current cursor position marker when saving the FroalaEditor contents (using `html.get` keep_markers method flag), then also set `_keepMarkers=true` context property. This ensures that FroalaReactive's comparison between current and new contents takes the market html into account.
 
 #### Methods
 

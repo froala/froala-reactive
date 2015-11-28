@@ -1,4 +1,7 @@
 # Changelog
+## 2.0.1_2 - 2015-11-28
+- [fix] Fixed _keepMarkers reference error
+
 ## 2.0.1_1 - 2015-11-27
 - [feature] Added _className data context property to override wrapper div class (to distinguish multiple instances in same template)
 - [feature] Added _keepMarkers data context property to work alongside code that preserves cursor position in the wrapped Froala Editor instance.

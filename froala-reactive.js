@@ -81,7 +81,7 @@ Template.froalaReactive.onRendered(function () {
     var currentHTMLWithMarkers = $input[froalaMethod]('html.get', _data._keepMarkers /* keep_markers */);
     if (_data._value && !_.isEqual(currentHTMLWithMarkers, _data._value)) {
       $input[froalaMethod]('html.set', _data._value);
-      _keepMarkers && $input[froalaMethod]('selection.restore');
+      _data._keepMarkers && $input[froalaMethod]('selection.restore');
 
     }
 

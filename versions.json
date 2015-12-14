@@ -21,8 +21,7 @@
       "4.4.0"
     ],
     [
-      "froala:editor",
-      "2.0.3"
+      "froala:editor", "2.0.4"
     ],
     [
       "geojson-utils",

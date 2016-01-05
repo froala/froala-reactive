@@ -1,8 +1,14 @@
 # Changelog
+## 2.0.5_1 - 2016-01-05
+- [fix] Register `_on` event handlers before creating FE instance, so that an `_oninitialized` event handler can be registered before the instance is created.
+- [fix] Pass back returned value from `_on` event callback functions.
+
 ## 2.0.3 - 2015-12-07
 - [upgrade] Bump version dependency on froala-editor to 2.0.3
+
 ## 2.0.2 - 2015-12-07
 - [upgrade] Bump version dependency on froala-editor to 2.0.2
+
 ## 2.0.1_2 - 2015-11-28
 - [fix] Fixed _keepMarkers reference error
 

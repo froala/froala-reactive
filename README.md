@@ -103,7 +103,21 @@ Template.myTemplate.helpers({
 });
 ```
 
-Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback
+Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback.
+
+**[From v2.0.5_1 onwards]** You can also provide an event handler for Froala Editor's [initialized](https://www.froala.com/wysiwyg-editor/docs/events#initialized) event, to defer post-creation setup (e.g. [initialising at.js](https://github.com/ichord/At.js/wiki/Usage-with-Froala-WYSIWYG-HTML-Editor) ):
+
+```javascript
+      _oninitialized: function (e, editor) {
+        editor.$el.atwho(config);
+
+        editor.events.on('keydown', function (e) {
+          if (e.which == $.FroalaEditor.KEYCODE.ENTER && editor.$el.atwho('isSelecting')) {
+            return false;
+          }
+        }, true);
+      },
+```
 
 ##### Froala Editor option pass-through
 

@@ -142,17 +142,6 @@ Template.froalaReactive.onDestroyed(function () {
 
 /** Initialise Froala Editor instance */
 function initEditor(tmpl, data, lastData, $input, froalaMethod) {
-  // Create Froala Editor instance, setting options & initial HTML content
-  // from template data context
-  tmpl.editor = $input[froalaMethod](data);
-  if (tmpl.data._value) {
-    $input[froalaMethod]('html.set', data._value);
-  }
-
-  // Hack to provide destroyed callback with froala editor object,
-  // by stuffing a reference to it in the template instance object.
-  // See: https://github.com/froala/froala-reactive/issues/2
-  tmpl.__froala_editor = $input.data('froala.editor');
 
   // Set up additional event handlers
   var eventHandlers = getEventHandlerNames(tmpl.data);
@@ -167,9 +156,22 @@ function initEditor(tmpl, data, lastData, $input, froalaMethod) {
       // has triggered if the data context changed. Hence, we pass the `lastData`
       // property as the data context for the callback function, not the original
       // `tmpl.data` object.
-      tmpl.data[opt].apply(lastData, arguments);
+      return tmpl.data[opt].apply(lastData, arguments);
     });
   });
+
+  // Create Froala Editor instance, setting options & initial HTML content
+  // from template data context
+  tmpl.editor = $input[froalaMethod](data);
+  if (tmpl.data._value) {
+    $input[froalaMethod]('html.set', data._value);
+  }
+
+  // Hack to provide destroyed callback with froala editor object,
+  // by stuffing a reference to it in the template instance object.
+  // See: https://github.com/froala/froala-reactive/issues/2
+  tmpl.__froala_editor = $input.data('froala.editor');
+
 }
 
 /**

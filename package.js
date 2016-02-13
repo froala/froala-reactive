@@ -1,7 +1,7 @@
 Package.describe({
   name: 'froala:editor-reactive',
   summary: 'A Meteor reactive template wrapper around Froala WYSIWYG HTML Rich Text Editor.',
-  version: '2.1.0',
+  version: '2.1.0_1',
   git: 'https://github.com/froala/froala-reactive.git'
 });
 

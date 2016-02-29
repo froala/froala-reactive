@@ -1,4 +1,12 @@
 # Changelog
+## 2.2.0 - 2016-02-29
+- [upgrade] Bump version dependency on froala-editor to 2.2.0
+## 2.1.0_1 - 2016-02-13
+- [fix] Update FE field contents if `_value` set to `null`. ([#27](https://github.com/froala/froala-reactive/issues/27))
+
+## 2.1.0 - 2016-02-01
+- [upgrade] Bump version dependency on froala-editor to 2.1.0
+
 ## 2.0.5_1 - 2016-01-05
 - [fix] Register `_on` event handlers before creating FE instance, so that an `_oninitialized` event handler can be registered before the instance is created.
 - [fix] Pass back returned value from `_on` event callback functions.

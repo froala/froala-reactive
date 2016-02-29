@@ -55,9 +55,10 @@ Template.froalaReactive.onCreated(function () {
 
 Template.froalaReactive.onRendered(function () {
   var tmpl = this,
-    lastData = tmpl.data,
     $input = tmpl.$('.'+tmpl.wrapperClassName),
     froalaMethod;
+
+  tmpl.lastData = tmpl.data;
 
   if ($input.length !== 1) {
     throw new Error ('invalid-froala-reactive-template');
@@ -68,41 +69,43 @@ Template.froalaReactive.onRendered(function () {
     throw new Error('invalid-froala-editor-plugin');
   }
 
-  initEditor(tmpl, tmpl.data, lastData, $input, froalaMethod);
+  initEditor(tmpl, tmpl.data, tmpl.lastData, $input, froalaMethod);
 
   // Autorun block, re-run every time the data context changes
   tmpl.autorun(function () {
-    var self = this;
-
     // Set up reactive dependency on template's data context
     var _data = Template.currentData();
 
-    // Update HTML data wrapped within froala editor, if changed
-    var currentHTMLWithMarkers = $input[froalaMethod]('html.get', _data._keepMarkers /* keep_markers */);
-    if (_data._value && !_.isEqual(currentHTMLWithMarkers, _data._value)) {
-      $input[froalaMethod]('html.set', _data._value);
-      _data._keepMarkers && $input[froalaMethod]('selection.restore');
+    Tracker.nonreactive(function () {
+      // Update HTML data wrapped within froala editor, if changed
+      var currentHTMLWithMarkers = $input[froalaMethod]('html.get', _data._keepMarkers /* keep_markers */);
+      if (_data && currentHTMLWithMarkers !== _data._value) {
+       // Avoid calling html.set with null
+        // See: https://github.com/froala/wysiwyg-editor/issues/1061
+        $input[froalaMethod]('html.set', _data._value || "");
+        _data._keepMarkers && $input[froalaMethod]('selection.restore');
+      }
 
-    }
+      // Update froala editor option values, if changed
+      var _changedOpts = _.filter(Object.keys(_data), function (opt) {
+          // Find all option values whose value has changed
+          // Exclude any opt properties that start with '_', reserved for
+          // passing froala-reactive - specific parameters into the template
+          // data context.
+          return opt.indexOf('_')!==0 && !_.isEqual(tmpl.lastData[opt], _data[opt]);
+      });
+      if (_changedOpts.length > 0) {
+        // Destroy and re-init the editor
+        var _snapshot = tmpl.editor.froalaEditor('snapshot.get');
+        tmpl.editor.froalaEditor('destroy');
+        initEditor(tmpl, _data, tmpl.lastData, $input, froalaMethod);
+        tmpl.editor.froalaEditor('snapshot.restore', _snapshot);
+      }
 
-    // Update froala editor option values, if changed
-    var _changedOpts = _.filter(Object.keys(_data), function (opt) {
-        // Find all option values whose value has changed
-        // Exclude any opt properties that start with '_', reserved for
-        // passing froala-reactive - specific parameters into the template
-        // data context.
-        return opt.indexOf('_')!==0 && !_.isEqual(lastData[opt], _data[opt]);
-    });
-    if (_changedOpts.length > 0) {
-      // Destroy and re-init the editor
-      var _snapshot = tmpl.editor.froalaEditor('snapshot.get');
-      tmpl.editor.froalaEditor('destroy');
-      initEditor(tmpl, _data, lastData, $input, froalaMethod);
-      tmpl.editor.froalaEditor('snapshot.restore', _snapshot);
-    }
+      // Save current data context for comparison on next autorun execution
+      tmpl.lastData = _data;      
+    })
 
-    // Save current data context for comparison on next autorun execution
-    lastData = _data;
    });
 });
 

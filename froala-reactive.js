@@ -36,7 +36,7 @@
  * Override the template wrapper class by setting '_className' argument (default "froala-reactive-meteorized")
  *
  * If you save the contents of the editor with markers included, set the `_keepMarkers=true` argument to make sure the comparison between current & new content respects the marker html.
- * 
+ *
  */
 
 'use strict';
@@ -103,7 +103,7 @@ Template.froalaReactive.onRendered(function () {
       }
 
       // Save current data context for comparison on next autorun execution
-      tmpl.lastData = _data;      
+      tmpl.lastData = _data;
     })
 
    });

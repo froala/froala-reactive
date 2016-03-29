@@ -138,9 +138,6 @@ Template.froalaReactive.onDestroyed(function () {
     $input[froalaMethod]('destroy');
   } catch (e) {}
 
-  // Workround for https://github.com/froala/wysiwyg-editor/issues/844
-  $('.fr-modal').remove();
-  $('.fr-overlay').remove();
 });
 
 /** Initialise Froala Editor instance */

@@ -1,6 +1,8 @@
 # Changelog
+## 2.2.3 - 2016-04-04
+- [upgrade] Bump version dependency on froala-editor to 2.2.3
 ## 2.2.2_1 - 2016-03-29
-- [fix] Remove workround code for [#844](https://github.com/froala/wysiwyg-editor/issues/844) which may be affecting applications with multiple FE editor instances that subsequently destroy some of them (at least if using the FE images plugin). 
+- [fix] Remove workround code for [#844](https://github.com/froala/wysiwyg-editor/issues/844) which may be affecting applications with multiple FE editor instances that subsequently destroy some of them (at least if using the FE images plugin).
 ## 2.2.2 - 2016-03-26
 - [upgrade] Bump version dependency on froala-editor to 2.2.2
 ## 2.2.1 - 2016-03-02

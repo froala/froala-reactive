@@ -4,7 +4,7 @@
 
 >Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
 
-## Breaking Change from v1.2.x to v2.x
+## Breaking Change to v2
 
 Version 2.0.0 of this package onwards uses the upgraded Froala Editor V2.  You will need to update and revise all Froala Editor API usage in your code (e.g. events, additional Froala Editor method calls, options) as described in the [V2 migration guide](https://www.froala.com/wysiwyg-editor/docs/migrate-from-v1).  Please contact Froala directly for help, unless you really think there is an issue in the reactive wrapper code in this package(!)
 

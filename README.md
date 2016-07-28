@@ -1,14 +1,14 @@
-## Froala-Reactive
+# Froala Reactive WYSIWYG HTML Editor
 
-Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
+>Froala-Reactive provides a template-based, reactive wrapper around the [Froala WYSIWYG HTML Editor](https://froala.com/wysiwyg-editor/pricing), designed to play nicely with [Meteor Framework](https://www.meteor.com/) client-side templates.
 
-Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
+>Note that Froala Editor requires a [license for commercial use](https://froala.com/wysiwyg-editor/pricing).
 
-#### Breaking Change from v1.2.x to v2.x
+## Breaking Change from v1.2.x to v2.x
 
 Version 2.0.0 of this package onwards uses the upgraded Froala Editor V2.  You will need to update and revise all Froala Editor API usage in your code (e.g. events, additional Froala Editor method calls, options) as described in the [V2 migration guide](https://www.froala.com/wysiwyg-editor/docs/migrate-from-v1).  Please contact Froala directly for help, unless you really think there is an issue in the reactive wrapper code in this package(!)
 
-#### Installation
+## Installation
 
 You can install Froala-Reactive using Meteor's package management system  The Froala-Reactive package automatically includes the separate froala:editor package which provides the actual Froala Editor javascript library:
 
@@ -16,7 +16,7 @@ You can install Froala-Reactive using Meteor's package management system  The Fr
 meteor add froala:editor-reactive
 ```
 
-#### Basic Usage
+## Basic Usage
 
 Froala-Reactive provides a [Template inclusion tag](https://github.com/meteor/meteor/blob/devel/packages/spacebars/README.md#inclusion-tags) which wraps the underlying Froala-Editor jQuery plugin.  In it's simplest form, add it to your template like this:
 
@@ -80,9 +80,8 @@ have to provide your own Froala-Editor event handler(s) to do that.
 
 However, Froala-Reactive *will* reactively update the displayed `_value` HTML immediately if you have assigned it to a data context property or template helper function which changes its value any time after the template has rendered (e.g. if the underlying collection document is updated from the server, or another action on the client).
 
-#### Options and Events
 
-##### `_on` Callbacks
+## Events
 
 You can provide callbacks for any of the Froala-Editor [events](https://froala.com/wysiwyg-editor/docs/events) by specifying `_on<event name>` arguments in the `{{> froalaReactive}}` inclusion tag with name of template helper functions that must return a function with the expected Froala-Editor event function signature.
 
@@ -119,7 +118,7 @@ Note that the event name used in the `_on<event name>` argument name must be exa
       },
 ```
 
-##### Froala Editor option pass-through
+## Options
 
 Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
 
@@ -137,15 +136,15 @@ Template.myTemplate.helpers({
 
 Note that option values cannot be changed after initialisation (e.g. [inlineMode](https://froala.com/wysiwyg-editor/docs/options#toolbarInline)) ... please refer to the Meteor-Editor documentation.
 
-##### _className wrapper div class name override
+#### _className wrapper div class name override
 
 If you have multiple instances of `{{froalaReactive}}` in the same template, and you need to target the underlying FroalaEditor instance in each, override the wrapping `div` class name in each instance to be a unique value, by specifying the `_className=fooClass` context property.
 
-##### _keepMarkers
+#### _keepMarkers
 
 If you preserve the current cursor position marker when saving the FroalaEditor contents (using `html.get` keep_markers method flag), then also set `_keepMarkers=true` context property. This ensures that FroalaReactive's comparison between current and new contents takes the market html into account.
 
-#### Methods
+## Methods
 
 You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.
 
@@ -158,17 +157,17 @@ Template.someTemplate.onRendered(function() {
 })
 ```
 
-#### Gotchas
+## Gotchas
 
 1. Remember that you must provide one or more `_on` callbacks to handle changing the froalaEditor contents, if you want use the Meteor Framework to do so.
 2. If two or more users are actively editing the same underlying state (e.g. the same property of the same document in a collection), and you have set up a contentChanged event handler, or an autosaving Froala Editor, then the content will keep changing.  Their local caret cursor will keep resetting and jumping around.  To avoid this, you may want to implement some kind of locking mechanism, to only one user can initiate an edit session at a time.  To do this properly requires implementing something like Operational Transform!
 3. The Froala Editor V2 API has renamed some methods with dotted notation (e.g. [save.before](https://www.froala.com/wysiwyg-editor/docs/events#save.before).  This means you cannot set their values directly in a blaze template (it throws an error in the blaze compiler if you try something like `{{froalaReactive onsave.before=doSave}}`).  Instead, you will have to create a template helper function that builds the complete context JSON object ... see the example given in the Basic section above.
 
-#### Acknowledgements
+## Acknowledgements
 
 This package is based on the implementation of the [x-editable-reactive-template](https://github.com/davidworkman9/x-editable-reactive-template) package.
 
-#### License
+## License
 
 This package is released under the MIT License (see LICENSE). However, in order to use Froala WYSIWYG HTML Editor plugin you should purchase a license for it.
 

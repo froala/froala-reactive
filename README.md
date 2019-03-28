@@ -46,7 +46,7 @@ Template.myTemplate.helpers({
       tabSpaces: false,
 
       // FE save.before event handler function:
-      "_onsave.before": function (e, editor) {
+      "_onsave.before": function ( editor) {
         // Get edited HTML from Froala-Editor
         var newHTML = editor.html.get(true /* keep_markers */);
         // Do something to update the edited value provided by the Froala-Editor plugin, if it has changed:
@@ -95,29 +95,14 @@ For example, to set up a callback for the [image.beforeUpload](https://froala.co
 Template.myTemplate.helpers({
   imagePasted: function () {
     var self = this;
-    return function (e, editor, img) {
+    return function (editor, img) {
       // Do something
     };
   }
 });
 ```
 
-Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration.  The Froala-Reactive code simply extracts the <event name> string from the inclusion tag argument, and appends it to the `froalaEditor.` string when setting up the underlying Froala-Editor plugin callback.
-
-**[From v2.0.5_1 onwards]** You can also provide an event handler for Froala Editor's [initialized](https://www.froala.com/wysiwyg-editor/docs/events#initialized) event, to defer post-creation setup (e.g. [initialising at.js](https://github.com/ichord/At.js/wiki/Usage-with-Froala-WYSIWYG-HTML-Editor) ):
-
-```javascript
-      _oninitialized: function (e, editor) {
-        editor.$el.atwho(config);
-
-        editor.events.on('keydown', function (e) {
-          if (e.which == $.FroalaEditor.KEYCODE.ENTER && editor.$el.atwho('isSelecting')) {
-            return false;
-          }
-        }, true);
-      },
-```
-
+Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration. 
 ## Options
 
 Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.
@@ -148,14 +133,6 @@ If you preserve the current cursor position marker when saving the FroalaEditor 
 
 You can invoke any of the Froala Editor [methods](https://froala.com/wysiwyg-editor/docs/methods) directly on the `editor` object in your Froala Editor event callback functions.  See above for an example of calling `editor.html.get()`.
 
-If you need to, you can access the underlying froalaEditor jQuery object from a parent template as:
-
-```javascript
-Template.someTemplate.onRendered(function() {
-  const tmpl = this;
-  tmpl.$('div.froala-reactive-meteorized').froalaEditor('some method')
-})
-```
 
 ## Gotchas
 

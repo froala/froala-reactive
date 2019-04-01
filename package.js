@@ -10,7 +10,7 @@ Package.onUse(function(api) {
 
   // Declare package dependencies
   api.use([
-    'froala:editor@3.0.0',
+    'froala:editor@3.0.0-beta.1',
     'templating',
     'underscore'
     ], 'client');

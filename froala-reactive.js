@@ -123,7 +123,7 @@ if (!tmpl.editor ){
   // managed by Froala Editor, so we wrap this in a try / catch block to
   // silently ignore any such cases
   try {
-    tmpl.editor .destroy();
+    tmpl.editor.destroy();
   } catch (e) {}
 
 });

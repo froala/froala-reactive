@@ -50,40 +50,35 @@ Template.froalaReactive.helpers({
 
 Template.froalaReactive.onCreated(function () {
   var tmpl = this;
+ tmpl.editor=null;
   tmpl.wrapperClassName = tmpl.data._className || "froala-reactive-meteorized";
 })
 
 Template.froalaReactive.onRendered(function () {
   var tmpl = this,
-    $input = tmpl.$('.'+tmpl.wrapperClassName),
-    froalaMethod;
-
+    $input = '.'+tmpl.wrapperClassName;
   tmpl.lastData = tmpl.data;
 
-  if ($input.length !== 1) {
-    throw new Error ('invalid-froala-reactive-template');
-  }
 
-  froalaMethod = getFroalaEditorJQueryInstanceMethod($input);
-  if (!froalaMethod) {
-    throw new Error('invalid-froala-editor-plugin');
-  }
-
-  initEditor(tmpl, tmpl.data, tmpl.lastData, $input, froalaMethod);
+  initEditor(tmpl, tmpl.data, tmpl.lastData, $input);
 
   // Autorun block, re-run every time the data context changes
   tmpl.autorun(function () {
+    if(tmpl.editor)
+    {
     // Set up reactive dependency on template's data context
     var _data = Template.currentData();
-
+    
     Tracker.nonreactive(function () {
+    
+      
       // Update HTML data wrapped within froala editor, if changed
-      var currentHTMLWithMarkers = $input[froalaMethod]('html.get', _data._keepMarkers /* keep_markers */);
+      var currentHTMLWithMarkers = tmpl.editor.html.get( _data._keepMarkers /* keep_markers */);
       if (_data && currentHTMLWithMarkers !== _data._value) {
        // Avoid calling html.set with null
         // See: https://github.com/froala/wysiwyg-editor/issues/1061
-        $input[froalaMethod]('html.set', _data._value || "");
-        _data._keepMarkers && $input[froalaMethod]('selection.restore');
+        tmpl.editor.html.set( _data._value || "");
+        _data._keepMarkers && tmpl.editor.selection.restore();
       }
 
       // Update froala editor option values, if changed
@@ -96,16 +91,16 @@ Template.froalaReactive.onRendered(function () {
       });
       if (_changedOpts.length > 0) {
         // Destroy and re-init the editor
-        var _snapshot = tmpl.editor.froalaEditor('snapshot.get');
-        tmpl.editor.froalaEditor('destroy');
-        initEditor(tmpl, _data, tmpl.lastData, $input, froalaMethod);
-        tmpl.editor.froalaEditor('snapshot.restore', _snapshot);
+        var _snapshot = tmpl.editor.snapshot.get();
+        tmpl.editor.destroy();
+        initEditor(tmpl, _data, tmpl.lastData, $input);
+        tmpl.editor.snapshot.restore( _snapshot);
       }
 
       // Save current data context for comparison on next autorun execution
       tmpl.lastData = _data;
     })
-
+    }
    });
 });
 
@@ -113,21 +108,14 @@ Template.froalaReactive.onRendered(function () {
  * Ensure froalaEditor is properly removed to prevent memory leaks
  */
 Template.froalaReactive.onDestroyed(function () {
- var tmpl = this,
-    $input = tmpl.$('.'+tmpl.wrapperClassName),
-    froalaMethod;
+ var tmpl=this;
 
-  froalaMethod = getFroalaEditorJQueryInstanceMethod($input);
-  if (!froalaMethod) {
-    return;
-  }
-
-  if (!$input.data('froala.editor')) {
+if (!tmpl.editor ){
     // Restore internal 'froala_editor' reference to froala editor.
     // For some reason, by the time we get here in the destroyed procedure,
     // this jQuery data appears to have been wiped.
     // See: https://github.com/froala/froala-reactive/issues/2
-    $input.data('froala.editor', tmpl.__froala_editor);
+     tmpl.__froala_editor = tmpl.editor;
   }
 
   // Destroy froala editor object itself
@@ -135,59 +123,62 @@ Template.froalaReactive.onDestroyed(function () {
   // managed by Froala Editor, so we wrap this in a try / catch block to
   // silently ignore any such cases
   try {
-    $input[froalaMethod]('destroy');
+    tmpl.editor.destroy();
   } catch (e) {}
 
 });
 
 /** Initialise Froala Editor instance */
-function initEditor(tmpl, data, lastData, $input, froalaMethod) {
+function initEditor(tmpl, data, lastData, $input) {
 
-  // Set up additional event handlers
-  var eventHandlers = getEventHandlerNames(tmpl.data);
-  _.each(eventHandlers, function (opt) {
-    var _eventName = 'froalaEditor.' + opt.substring(3); // Remove '_on' prefix
-    $input.on(_eventName, function (e) {
-      e.preventDefault();
-      // Call callback, setting `this` to the latest, reactive, data context
-      // of this template instance.
-      // Callback function can use `this._value` to get up-to-date model value.
-      // Also note that these callbacks fire AFTER the autorun function
-      // has triggered if the data context changed. Hence, we pass the `lastData`
-      // property as the data context for the callback function, not the original
-      // `tmpl.data` object.
-      return tmpl.data[opt].apply(lastData, arguments);
-    });
-  });
+
 
   // Create Froala Editor instance, setting options & initial HTML content
   // from template data context
-  tmpl.editor = $input[froalaMethod](data);
-  if (tmpl.data._value) {
-    $input[froalaMethod]('html.set', data._value);
-  }
 
-  // Hack to provide destroyed callback with froala editor object,
-  // by stuffing a reference to it in the template instance object.
-  // See: https://github.com/froala/froala-reactive/issues/2
-  tmpl.__froala_editor = $input.data('froala.editor');
+  data.events={
+    initialized: function() {
+      tmpl.editor=this;
+
+      if (tmpl.data._value) {
+        tmpl.editor.html.set(tmpl.data._value);
+      }
+  
+      // Hack to provide destroyed callback with froala editor object,
+      // by stuffing a reference to it in the template instance object.
+      // See: https://github.com/froala/froala-reactive/issues/2
+      tmpl.__froala_editor = this;
+
+      // Set up additional event handlers
+var eventHandlers = getEventHandlerNames(tmpl.data);
+_.each(eventHandlers, function (opt) {
+var _eventName =  opt.substring(3),instance=tmpl.editor; // Remove '_on' prefix
+tmpl.editor.events.on(_eventName, function() {
+  // Call callback, setting `this` to the latest, reactive, data context
+  // of this template instance.
+  // Callback function can use `this._value` to get up-to-date model value.
+  // Also note that these callbacks fire AFTER the autorun function
+  // has triggered if the data context changed. Hence, we pass the `lastData`
+  // property as the data context for the callback function, not the original
+  // `tmpl.data` object.
+  var argumentArray=[tmpl.editor];
+  for(var x=0;x<arguments.length;x++)
+  {
+  argumentArray.push(arguments[x]);
+  }
+  return tmpl.data[opt].apply(lastData,argumentArray);
+});
+});  
+    }
+  }
+  
+   new FroalaEditor($input,data);
+ 
+  
 
 }
 
-/**
- * Internal function to return correct Froala Editor instance method name
- *
- */
-function getFroalaEditorJQueryInstanceMethod(froalaJQueryObject) {
-  if (froalaJQueryObject) {
-    if (_.isFunction(froalaJQueryObject.froalaEditor)) {
-      // Original froala jQuery instance method
-      return 'froalaEditor';
-    }
-  }
-  // Whoops! Looks like froala editor code has not been loaded
-  return null;
-};
+
 
 /**
  * Internal function to parse any '_on<event>' event callback arguments

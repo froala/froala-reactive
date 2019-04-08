@@ -17,11 +17,7 @@
       "1.0.4"
     ],
     [
-      "fortawesome:fontawesome",
-      "4.7.0"
-    ],
-    [
-      "froala:editor", "2.9.3"
+      "froala:editor", "3.0.0"
     ],
     [
       "geojson-utils",
@@ -33,10 +29,6 @@
     ],
     [
       "id-map",
-      "1.0.1"
-    ],
-    [
-      "jquery",
       "1.0.1"
     ],
     [

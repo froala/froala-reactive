@@ -102,7 +102,7 @@ Template.myTemplate.helpers({
 });
 ```
 
-Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('froalaEditor.<event name>', function ....)` callback declaration. 
+Note that the event name used in the `_on<event name>` argument name must be exactly the same as used in the Froala Editor `on('<event name>', function ....)` callback declaration. 
 ## Options
 
 Similarly, you can pass any of the Froala-Editor [options](https://froala.com/wysiwyg-editor/docs/options) to the underlying Froala-Editor plugin object, by simply declaring them as arguments to the `froalaReactive` inclusion tag.  Also, if any of these option argument values are set to values on your template's data context, or from return vaues from template helpers, Froala-Reactive will call the Froala Editor `option` setter method to change them if any of them change values once your template has been rendered.

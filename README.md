@@ -34,16 +34,16 @@ Template.myTemplate.helpers({
     var self = this;
     return {
       // Set html content
-      _value: self.myDoc.myHTMLField,
+      // _value: self.myDoc.myHTMLField,
       // Preserving cursor markers
-      _keepMarkers: true,
+      // _keepMarkers: true,
       // Override wrapper class 
-      _className: "froala-reactive-meteorized-override",
+      // _className: "froala-reactive-meteorized-override",
 
       // Set some FE options
-      toolbarInline: true,
-      initOnClick: false,
-      tabSpaces: false,
+      // toolbarInline: true,
+      // initOnClick: false,
+      // tabSpaces: false,
 
       // FE save.before event handler function:
       "_onsave.before": function ( editor) {

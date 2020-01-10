@@ -32,6 +32,7 @@ Froala-Reactive provides a [Template inclusion tag](https://github.com/meteor/me
 Template.myTemplate.helpers({
   getFEContext: function () {
     var self = this;
+    self.myDoc.myHTMLField = 'Hello World !';
     return {
       // Set html content
       _value: self.myDoc.myHTMLField,
@@ -41,7 +42,7 @@ Template.myTemplate.helpers({
       _className: "froala-reactive-meteorized-override",
 
       // Set some FE options
-      toolbarInline: true,
+      // toolbarInline: true,
       initOnClick: false,
       tabSpaces: false,
 
